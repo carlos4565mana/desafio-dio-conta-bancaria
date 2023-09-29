@@ -34,6 +34,15 @@ public class Conta {
 	public Double getSaldo() {
 		return saldo;
 	}
+	
+	 public String toString() {
+
+	        return "\nBank account: " + this.getNumeroConta() +
+	                "\nCliente: " + this.pessoa.getNome() +
+	                "\nCPF: " + this.pessoa.getCpf() +
+	                "\nEmail: " + this.pessoa.getEmail() +
+	                "\n" ;
+	    }
 
 	public void depositar(Double valor) {
 		if(valor > 0) {
