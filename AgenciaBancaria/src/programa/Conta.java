@@ -35,9 +35,18 @@ public class Conta {
 		return saldo;
 	}
 	
-	 public String toString() {
+	 public String getAgencia() {
+		return agencia;
+	}
 
-	        return "\nBank account: " + this.getNumeroConta() +
+	public void setAgencia(String agencia) {
+		this.agencia = agencia;
+	}
+
+	public String toString() {
+
+	        return "\nNumero da Conta: " + this.getNumeroConta() +
+	        		"\nAgencia: "+this.getAgencia()+
 	                "\nCliente: " + this.pessoa.getNome() +
 	                "\nCPF: " + this.pessoa.getCpf() +
 	                "\nEmail: " + this.pessoa.getEmail() +
