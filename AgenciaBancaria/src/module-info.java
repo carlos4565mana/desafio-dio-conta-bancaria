@@ -4,5 +4,5 @@
 /**
  * 
  */
-module contabancaria {
+module AgenciaBancaria {
 }
