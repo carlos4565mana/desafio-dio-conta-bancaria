@@ -1,6 +1,5 @@
 package programa;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -27,7 +26,7 @@ public class AgenciaBancaria {
 		System.out.println("|               Opção 3 - Sacar                       |");
 		System.out.println("|               Opção 4 - Transferir                  |");
 		System.out.println("|               Opção 5 - Listar                      |");
-		System.out.println("|               Opção 6 - Saldo                      |");
+		System.out.println("|               Opção 6 - Saldo                       |");
 		System.out.println("|               Opção 7 - Sair                        |");
 		System.out.println("=======================================================");
 
@@ -68,6 +67,7 @@ public class AgenciaBancaria {
 		}
 
 	}
+	
 
 	private static void consultarSaldo() {
 		
@@ -82,7 +82,9 @@ public class AgenciaBancaria {
 		Conta conta = encontrarConta(numeroConta, agencia);
 		if (conta != null) {
 			if (senha.equals(conta.getPessoa().getSenha())) {
-				System.out.println(conta.getSaldo());
+				System.out.println("Conta = "+ conta.getNumeroConta());
+				System.out.println("Nome  = "+ conta.getPessoa().getNome());
+				System.out.println("Saldo = "+ conta.getSaldo());
 
 			} else {
 				System.out.println("Senha incorreta!!!");
@@ -94,20 +96,31 @@ public class AgenciaBancaria {
 		operacoes();
 
 	}
+	
 
 	private static void listarContas() {
-
-		if (contasBancarias.size() > 0) {
-			for (Conta conta : contasBancarias) {
-				System.out.println(conta);
+		
+		System.out.println("Digite a senha de administrador!");
+		String senha = input.next();
+		
+		if(senha.equals("admin")) {
+			if (contasBancarias.size() > 0) {
+				for (Conta conta : contasBancarias) {
+					System.out.println(conta);
+				}
+			} else {
+				System.out.println("--- Não há contas cadastradas ---");
 			}
-		} else {
-			System.out.println("--- Não há contas cadastradas ---");
+		}else {
+			System.out.println("Você não tem privilégio de  administrador!");
 		}
+
+		
 
 		operacoes();
 
 	}
+	
 
 	private static void transferir() {
 		
@@ -146,6 +159,8 @@ public class AgenciaBancaria {
 		operacoes();
 	}
 
+	
+	@SuppressWarnings("unused")
 	private static void sacar() {
 		System.out.println("Digite o nome da agência: ");
 		String agencia = input.next();
@@ -154,13 +169,19 @@ public class AgenciaBancaria {
 		int numeroConta = input.nextInt();
 
 		Conta conta = encontrarConta(numeroConta, agencia);
-		System.out.println(conta);
+		
+		System.out.println("Conta = "+conta.getNumeroConta());
+		System.out.println("Nome  = "+ conta.getPessoa().getNome());
+		System.out.println("Saldo = "+ conta.getSaldo());
+		
 		if (conta != null) {
+			
+			System.out.println("Digite o valor do saque: ");
+			double valorSaque = input.nextDouble();
 			System.out.println("\nDigite a senha: ");
 			String senha = input.next();
 			if (senha.equals(conta.getPessoa().getSenha())) {
-				System.out.println("Digite o valor do saque: ");
-				double valorSaque = input.nextDouble();
+				
 				if (valorSaque <= conta.getSaldo()) {
 					conta.sacar(valorSaque);
 					operacoes();
@@ -177,6 +198,7 @@ public class AgenciaBancaria {
 			operacoes();
 		}
 	}
+	
 
 	private static Conta encontrarConta(int numeroConta, String agencia) {
 		Conta conta = null;
@@ -189,6 +211,7 @@ public class AgenciaBancaria {
 		}
 		return conta;
 	}
+	
 
 	private static void depositar() {
 		
@@ -214,6 +237,8 @@ public class AgenciaBancaria {
 		operacoes();
 
 	}
+	
+	
 
 	private static void criarConta() {
 		System.out.println("\nDigite o Valor de Deposito: ");
@@ -228,44 +253,73 @@ public class AgenciaBancaria {
 
 		int vezes = 0;
 		boolean teste = false;
-		String agencia;
+		String agencia = null;
 
-		do {
+		while (teste == false){
 			System.out.println("Digite o nome da agencia: ");
 			agencia = input.next();
 			teste = agencia.matches("\\d{3}-\\d{1}");
 			if (teste == false) {
-				System.out.println("Digite um valor valido!");
 				vezes++;
 				if (vezes > 2) {
-					teste = true;
+
 					operacoes();
 				}
 
 			}
 
-		} while (teste == false);
-		;
+		} 
+		
 
-		System.out.println("\nDigite o Email: ");
-		String email = input.next();
-
-		System.out.println("\nDigite o CPF: ");
-		String cpf = input.next();
-
+		String cpf = null ; 
+		vezes = 0;
+		boolean cpfValido = false;
+		
+		while(cpfValido == false) {
+			
+			System.out.println("Digite um cpf válido!");
+			cpf = input.next();
+			cpfValido = Utils.validarCpf(cpf);
+			
+			vezes++;
+			if(vezes > 2) {
+				operacoes();
+				
+			}
+			
+		}
+		
+		String email = null ; 
+		vezes = 0;
+		
+		boolean emailValido = false;
+		while(emailValido == false) {
+			
+			System.out.println("Digite um email válido!");
+			email = input.next();
+			emailValido = Utils.validarEmail(email);
+			
+			vezes++;
+			if(vezes > 2) {
+				operacoes();
+				
+			}
+			
+		}
+		
+ 
 		System.out.println("Digite sua Senha: ");
 		String senha = input.next();
 
 		Pessoa cliente = new Pessoa(nome, email, cpf, senha);
 
 		Conta conta = new Conta(cliente);
+		
 		conta.setAgencia(agencia);
 		conta.depositar(deposito);
 
 		contasBancarias.add(conta);
-		int test = conta.getNumeroConta();
-		System.out.println(test);
-		System.out.println(conta);
+	
 		System.out.println("--- Sua conta foi criada com sucesso! ---");
 
 		operacoes();
