@@ -70,12 +70,16 @@ public class AgenciaBancaria {
 	}
 
 	private static void consultarSaldo() {
+		
+		System.out.println("Digite o nome da agência: ");
+		String agencia = input.next();
 
 		System.out.println("Digite o Número da Conta: ");
 		int numeroConta = input.nextInt();
+		
 		System.out.println("Digite o Número da Senha: ");
 		String senha = input.next();
-		Conta conta = encontrarConta(numeroConta);
+		Conta conta = encontrarConta(numeroConta, agencia);
 		if (conta != null) {
 			if (senha.equals(conta.getPessoa().getSenha())) {
 				System.out.println(conta.getSaldo());
@@ -91,7 +95,7 @@ public class AgenciaBancaria {
 
 	}
 
-	public static void listarContas() {
+	private static void listarContas() {
 
 		if (contasBancarias.size() > 0) {
 			for (Conta conta : contasBancarias) {
@@ -105,16 +109,51 @@ public class AgenciaBancaria {
 
 	}
 
-	public static void transferir() {
+	private static void transferir() {
+		
+		System.out.println("\nDigite o número da conta para transferência:");
+		int numeroContaRemetente = input.nextInt();
+		
+		System.out.println("Digite o nome da agência: ");
+		String agencia = input.next();
+		
+        Conta contaRemetente = encontrarConta(numeroContaRemetente, agencia);
+        if(contaRemetente != null) {
+        	
+        	System.out.println("\nDigite o número da conta do destinatário: ");
+        	int numeroContaDestinatario = input.nextInt();
+        	System.out.println("Digite o nome da agência: ");
+    		String agenciaDestinatario = input.next();
+        	
+        	Conta contaDestinatario = encontrarConta(numeroContaDestinatario, agenciaDestinatario);
+        	if(contaDestinatario != null) {
+        		System.out.println("Valor da transferência: ");
+                Double valor = input.nextDouble();
+                
+                System.out.println("Digite a senha:");
+                String senha = input.next();
+                
+                if(senha.equals(contaDestinatario.getPessoa().getSenha())) {
+                	contaDestinatario.transferencia(contaRemetente, valor);
+                }
+        	}
 
+        	
+        }else {
+        	 System.out.println("--- Conta para transferência não encontrada ---");
+        	
+        }
+		operacoes();
 	}
 
-	public static void sacar() {
+	private static void sacar() {
+		System.out.println("Digite o nome da agência: ");
+		String agencia = input.next();
 
 		System.out.println("\nDigite o Número da Conta: ");
 		int numeroConta = input.nextInt();
 
-		Conta conta = encontrarConta(numeroConta);
+		Conta conta = encontrarConta(numeroConta, agencia);
 		System.out.println(conta);
 		if (conta != null) {
 			System.out.println("\nDigite a senha: ");
@@ -139,11 +178,11 @@ public class AgenciaBancaria {
 		}
 	}
 
-	private static Conta encontrarConta(int numeroConta) {
+	private static Conta encontrarConta(int numeroConta, String agencia) {
 		Conta conta = null;
 		if (contasBancarias.size() > 0) {
 			for (Conta cont : contasBancarias) {
-				if (cont.getNumeroConta() == numeroConta) {
+				if (cont.getNumeroConta() == numeroConta && cont.getAgencia().equals(agencia))  {
 					conta = cont;
 				}
 			}
@@ -151,11 +190,17 @@ public class AgenciaBancaria {
 		return conta;
 	}
 
-	public static void depositar() {
+	private static void depositar() {
+		
+		System.out.println("Digite o nome da agência: ");
+		String agencia = input.next();
+		
 
 		System.out.println("Digite o Número da Conta: ");
 		int numeroConta = input.nextInt();
-		Conta conta = encontrarConta(numeroConta);
+		
+		
+		Conta conta = encontrarConta(numeroConta, agencia);
 
 		if (conta != null) {
 			System.out.println("Qual valor deseja depositar? ");
@@ -170,7 +215,7 @@ public class AgenciaBancaria {
 
 	}
 
-	public static void criarConta() {
+	private static void criarConta() {
 		System.out.println("\nDigite o Valor de Deposito: ");
 		double deposito = input.nextDouble();
 		if (deposito < 1000) {

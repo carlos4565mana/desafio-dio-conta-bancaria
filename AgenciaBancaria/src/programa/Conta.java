@@ -70,6 +70,17 @@ public class Conta {
 			System.out.println("Não foi possivel realizar o Saque!");
 		}
 	}
+
+	public void transferencia(Conta contaDestinatario, Double valor) {
+		if(valor > 0 && this.getSaldo() >= valor) {
+			this.saldo = this.getSaldo() - valor;
+			contaDestinatario.saldo = contaDestinatario.getSaldo() + valor;
+			System.out.println("Transferência  realizado com sucesso!");
+		}else {
+			System.out.println("Não foi possível realizar a tranferência");
+		}
+		
+	}
 	
 	
 	
